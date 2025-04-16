@@ -1,0 +1,34 @@
+id: xss-detection-advanced-v2
+info:
+  name: Advanced XSS Detection v2
+  author: Your Name
+  severity: High
+
+requests:
+  - method: GET
+    path:
+      - "/search?q=<script>alert(\"XSS1\")</script>"
+      - "/search?q=<svg onload=alert(\"XSS3\")>"
+
+    matchers:
+      - type: word
+        words:
+          - "<script>alert(\"XSS1\")</script>"
+          - "<svg onload=alert(\"XSS3\")>"
+        condition: or
+        part: body
+
+  - method: POST
+    path:
+      - "/submit"
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    body: "input=<img src='x' onerror='alert(\"XSS2\")'>&comment=<script>alert(\"XSS4\")</script>"
+
+    matchers:
+      - type: word
+        words:
+          - "<img src='x' onerror='alert(\"XSS2\")'>"
+          - "<script>alert(\"XSS4\")</script>"
+        condition: or
+        part: body
