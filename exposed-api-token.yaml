@@ -1,0 +1,23 @@
+id: exposed-api-token
+
+info:
+  name: Exposed API Token
+  author: NR1997
+  severity: high
+  description: Detects an exposed API token at /api/token.
+  tags: token,exposure,api
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/token"
+
+    matchers:
+      - type: word
+        words:
+          - '"token":'
+        part: body
+
+      - type: status
+        status:
+          - 200
